@@ -29,6 +29,13 @@ const _nav = [
     component: CNavTitle,
     name: 'Theme',
   },
+
+  {
+    component: CNavItem,
+    name: 'Projects',
+    to: '/forms/create-project',
+    icon: <CIcon icon={cilNotes} customClassName="nav-icon" />,
+  },
   {
     component: CNavItem,
     name: 'Colors',
