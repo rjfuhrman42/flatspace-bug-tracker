@@ -6,6 +6,7 @@ import {
   cilChartPie,
   cilCursor,
   cilDrop,
+  cilList,
   cilNotes,
   cilPencil,
   cilPuzzle,
@@ -36,6 +37,12 @@ const _nav = [
     name: 'Create new project',
     to: '/forms/create-project',
     icon: <CIcon icon={cilPlus} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavItem,
+    name: 'View existing projects',
+    to: '/base/projects',
+    icon: <CIcon icon={cilList} customClassName="nav-icon" />,
   },
   {
     component: CNavTitle,

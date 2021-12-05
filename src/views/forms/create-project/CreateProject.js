@@ -18,6 +18,7 @@ const CreateProject = () => {
       </CCardHeader>
       <CCardBody>
         <CForm>
+          <p className="text-medium-emphasis small">Create a new project to add bugs</p>
           <div className="mb-3">
             <CFormLabel htmlFor="exampleFormControlInput1">Project Name</CFormLabel>
             <CFormInput type="text" id="exampleFormControlInput1" placeholder="hello-word-app..." />
