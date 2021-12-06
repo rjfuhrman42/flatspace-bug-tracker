@@ -1,7 +1,7 @@
 import React from 'react'
-import { CCard, CCardBody, CCardHeader, CListGroup, CListGroupItem } from '@coreui/react'
+import { CCard, CCardBody, CCardHeader, CListGroup, CListGroupItem, CNavLink } from '@coreui/react'
 
-const ListGroups = () => {
+const Projects = () => {
   return (
     <CCard className="mb-4">
       <CCardHeader>
@@ -10,11 +10,13 @@ const ListGroups = () => {
       <CCardBody>
         <p className="text-medium-emphasis small">Your current projects</p>
         <CListGroup>
-          <CListGroupItem>example-project</CListGroupItem>
+          <CListGroupItem component="a" href="#/base/project">
+            example-project
+          </CListGroupItem>
         </CListGroup>
       </CCardBody>
     </CCard>
   )
 }
 
-export default ListGroups
+export default Projects
