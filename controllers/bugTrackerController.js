@@ -1,4 +1,8 @@
-exports.getTransactions = (req, res, next) => {
+const { Project, Bug } = require("../models/Project");
+
+exports.getProjects = async (req, res, next) => {
+  try {
+  } catch (err) {}
   res.send("GET request");
 };
 
