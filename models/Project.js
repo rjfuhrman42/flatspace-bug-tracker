@@ -54,13 +54,13 @@ const ProjectSchema = new mongoose.Schema({
     default: Date.now,
   },
   /* 
-   --------------------------------------------------------------------------------------------
+   --------------------------------------------------------------------------------------
     Schema.Types.ObjectId, ref: "~collection reference name~" 
     =========================================================
-    allows us to use populate() later to populate the bugs associated with this project
+    Allows us to use populate() later to populate the bugs associated with this project
     Those bugs are stored in a separate collection because bugs will be unbounded. 
-    They will contain a projectId, so that they can be populated to their respective projects
-   --------------------------------------------------------------------------------------------
+    They contain a projectId, so that they can be populated to their respective projects
+   --------------------------------------------------------------------------------------
    */
   bugs: [{ type: mongoose.Schema.Types.ObjectId, ref: "Bug" }],
 });
@@ -68,4 +68,4 @@ const ProjectSchema = new mongoose.Schema({
 const Project = mongoose.model("Project", ProjectSchema);
 const Bug = mongoose.model("Bug", BugSchema);
 
-modules.export = { Project, Bug };
+module.exports = { Project, Bug };
