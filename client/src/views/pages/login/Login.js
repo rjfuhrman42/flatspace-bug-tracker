@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import {
   CButton,
@@ -15,8 +15,25 @@ import {
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilLockLocked, cilUser } from '@coreui/icons'
+import { GlobalContext } from 'src/context/GlobalState'
 
 const Login = () => {
+  const { user, login } = useContext(GlobalContext)
+  const [isIncorrect, setIsIncorrect] = useState(false)
+
+  async function handleClick(e) {
+    const username = document.getElementById('form__login__username').value
+    const password = document.getElementById('form__login__password').value
+
+    if (!username || !password) setIsIncorrect(true)
+
+    await login(username, password)
+  }
+
+  useEffect(() => {
+    if (!user) setIsIncorrect(true)
+  }, [user])
+
   return (
     <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
       <CContainer>
@@ -28,11 +45,16 @@ const Login = () => {
                   <CForm>
                     <h1>Login</h1>
                     <p className="text-medium-emphasis">Sign In to your account</p>
+                    {isIncorrect && <h5>Incorrect Username or Password</h5>}
                     <CInputGroup className="mb-3">
                       <CInputGroupText>
                         <CIcon icon={cilUser} />
                       </CInputGroupText>
-                      <CFormInput placeholder="Username" autoComplete="username" />
+                      <CFormInput
+                        placeholder="Username"
+                        autoComplete="username"
+                        id="form__login__username"
+                      />
                     </CInputGroup>
                     <CInputGroup className="mb-4">
                       <CInputGroupText>
@@ -42,11 +64,13 @@ const Login = () => {
                         type="password"
                         placeholder="Password"
                         autoComplete="current-password"
+                        id="form__login__password"
                       />
                     </CInputGroup>
+
                     <CRow>
                       <CCol xs={6}>
-                        <CButton color="primary" className="px-4">
+                        <CButton color="primary" className="px-4" onClick={(e) => handleClick(e)}>
                           Login
                         </CButton>
                       </CCol>

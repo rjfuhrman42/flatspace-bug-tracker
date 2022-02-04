@@ -38,17 +38,15 @@ const strategy = new LocalStrategy(async function verify(
    -----------------------------------------------------------------------------------------------------
    */
 
-    const user = await User.findOne(
-      { username: username },
-      function (err, user) {
-        if (err) return cb(err);
-        if (!user) {
-          return cb(null, false, {
-            message: "Incorrect username or password.",
-          });
-        }
+    await User.findOne({ username: username }, function (err, user) {
+      if (err) return cb(err);
+      if (!user) {
+        return cb(null, false, {
+          message: "Incorrect username or password.",
+        });
+      }
 
-        /* 
+      /* 
    -----------------------------------------------------------------------------------------------------
     THEN - CHECK THE PASSWORD
     ==========================
@@ -61,27 +59,26 @@ const strategy = new LocalStrategy(async function verify(
    -----------------------------------------------------------------------------------------------------
    */
 
-        crypto.pbkdf2(
-          password,
-          user.salt,
-          310000,
-          32,
-          "sha256",
-          (err, hashedPassword) => {
-            if (err) {
-              return cb(err);
-            }
-            if (!crypto.timingSafeEqual(user.hashed_password, hashedPassword)) {
-              return cb(null, false, {
-                message: "Incorrect username or password.",
-              });
-            }
-
-            return cb(null, user);
+      crypto.pbkdf2(
+        password,
+        user.salt,
+        310000,
+        32,
+        "sha256",
+        (err, hashedPassword) => {
+          if (err) {
+            return cb(err);
           }
-        );
-      }
-    ).clone();
+          if (!crypto.timingSafeEqual(user.hashed_password, hashedPassword)) {
+            return cb(null, false, {
+              message: "Incorrect username or password.",
+            });
+          }
+
+          return cb(null, user);
+        }
+      );
+    }).clone();
   } catch (err) {
     console.log(err);
   }

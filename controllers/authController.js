@@ -54,7 +54,12 @@ exports.login = async (req, res, next) => {
   console.log(req.user, "Login Successful");
   req.login(req.user, (err) => {
     if (err) res.json({ error: err });
-    return res.send(req.user);
+    const { username, _id } = req.user;
+
+    return res.status(201).json({
+      success: true,
+      data: { username: username, id: _id },
+    });
   });
 };
 
