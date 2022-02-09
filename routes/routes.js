@@ -25,12 +25,15 @@ router
     checkIfAlreadyRegistered,
     registerUser,
     passport.authenticate("local"),
-    login
+    login,
+    getCurrentUser
   );
 
 router.route("/login").post(passport.authenticate("local"), login);
 
 router.route("/logout").post(logout);
+
+router.route("/checkuser").get(getCurrentUser);
 
 router.route("/projects").get(getProjects).post(addProject);
 

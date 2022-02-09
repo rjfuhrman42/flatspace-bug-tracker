@@ -53,15 +53,33 @@ export const GlobalProvider = ({ children }) => {
     }
   }
 
-  function logout(username) {
-    dispatch({
-      type: 'LOGOUT',
-      payload: { username },
-    })
+  async function logout() {
+    try {
+      const response = await axios.post('/api/v1/logout')
+      dispatch({
+        type: 'LOGOUT',
+        payload: response.data.data,
+      })
+    } catch (err) {}
+  }
+
+  async function checkUser() {
+    try {
+      const response = await axios.get('/api/v1/checkuser')
+      dispatch({
+        type: 'CHECK_USER',
+        payload: response.data.data,
+      })
+    } catch (err) {
+      dispatch({
+        type: 'LOGIN_ERROR',
+        payload: undefined,
+      })
+    }
   }
 
   return (
-    <GlobalContext.Provider value={{ user: state.user, registerUser, login, logout }}>
+    <GlobalContext.Provider value={{ user: state.user, registerUser, login, logout, checkUser }}>
       {children}
     </GlobalContext.Provider>
   )

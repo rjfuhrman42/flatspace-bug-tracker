@@ -1,5 +1,6 @@
 const express = require("express");
-
+const session = require("express-session");
+const passport = require("passport");
 const dotenv = require("dotenv");
 const colors = require("colors");
 const morgan = require("morgan");
@@ -15,6 +16,15 @@ connectDB();
 const app = express();
 
 app.use(express.json());
+app.use(
+  session({
+    secret: "Random Text",
+    resave: false,
+    saveUninitialized: false,
+  })
+);
+app.use(passport.initialize());
+app.use(passport.session());
 
 const routes = require("./routes/routes");
 

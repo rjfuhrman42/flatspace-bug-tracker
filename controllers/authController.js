@@ -8,9 +8,13 @@ exports.getCurrentUser = (req, res) => {
   console.log(`current user: ${req.user}`);
 
   if (req.user) {
-    res.json({ user: req.user });
+    const { username, _id } = req.body;
+    return res.status(200).json({
+      success: true,
+      data: { username: username, id: _id },
+    });
   } else {
-    res.json({ user: null });
+    res.status(401).json({ user: null });
   }
 };
 
@@ -50,8 +54,8 @@ exports.registerUser = async (req, res, next) => {
   );
 };
 
-exports.login = async (req, res, next) => {
-  console.log(req.user, "Login Successful");
+exports.login = (req, res, next) => {
+  console.log("Login Successful");
   req.login(req.user, (err) => {
     if (err) res.json({ error: err });
     const { username, _id } = req.user;
@@ -63,7 +67,8 @@ exports.login = async (req, res, next) => {
   });
 };
 
-exports.logout = async (req, res, next) => {
+exports.logout = (req, res, next) => {
+  console.log("Logout successful");
   req.logout(req.user);
   res.redirect("/");
 };

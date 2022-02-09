@@ -18,7 +18,7 @@ passport.deserializeUser(async function (id, done) {
   //            ↓
   await User.findById(id, function (err, user) {
     done(err, user);
-  }); //        └──────────────→ user object attaches to the request as req.user
+  }).clone(); //        └──────────────→ user object attaches to the request as req.user
 });
 
 const strategy = new LocalStrategy(async function verify(
@@ -85,5 +85,6 @@ const strategy = new LocalStrategy(async function verify(
 });
 
 passport.use(strategy);
-
+passport.initialize();
+passport.session();
 module.exports = passport;
