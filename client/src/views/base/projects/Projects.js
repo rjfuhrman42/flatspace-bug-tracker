@@ -1,5 +1,5 @@
 import React from 'react'
-import { CCard, CCardBody, CCardHeader, CListGroup, CListGroupItem, CNavLink } from '@coreui/react'
+import { CCard, CCardBody, CCardHeader, CListGroup, CListGroupItem } from '@coreui/react'
 
 const Projects = () => {
   return (

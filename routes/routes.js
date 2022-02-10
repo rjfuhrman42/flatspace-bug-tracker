@@ -17,8 +17,6 @@ const {
   logout,
 } = require("../controllers/authController");
 
-router.route("/").get(getCurrentUser);
-
 router
   .route("/register")
   .post(

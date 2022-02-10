@@ -22,6 +22,9 @@ const App = () => {
   const { user, checkUser } = useContext(GlobalContext)
 
   useEffect(() => {
+    // On page load, check to see if the user is still in a session
+    // If the user is not in a session, then the user will update to null.
+    // Page will redirect to "/login"
     checkUser()
   }, [])
   return (

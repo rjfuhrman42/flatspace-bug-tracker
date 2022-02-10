@@ -1,6 +1,9 @@
 const User = require("../models/User");
 const crypto = require("crypto");
 
+// @desc checks if there is a user on this route.
+// @route POST /api/v1/checkuser
+// @access Private (?)
 exports.getCurrentUser = (req, res) => {
   // checks if there is a user on this route.
   // if there is, return that user to the frontend for use.
@@ -8,7 +11,8 @@ exports.getCurrentUser = (req, res) => {
   console.log(`current user: ${req.user}`);
 
   if (req.user) {
-    const { username, _id } = req.body;
+    const { username, _id } = req.user;
+
     return res.status(200).json({
       success: true,
       data: { username: username, id: _id },
@@ -18,6 +22,9 @@ exports.getCurrentUser = (req, res) => {
   }
 };
 
+// @desc check if the user is already registered
+// @route POST /api/v1/register
+// @access Private (?)
 exports.checkIfAlreadyRegistered = async (req, res, next) => {
   const { username } = req.body;
   const registered = await User.find({ username });
@@ -28,6 +35,9 @@ exports.checkIfAlreadyRegistered = async (req, res, next) => {
   next();
 };
 
+// @desc register a user
+// @route POST /api/v1/register
+// @access Private (?)
 exports.registerUser = async (req, res, next) => {
   // need to encrypt password
   const { username, password } = req.body;
@@ -54,10 +64,16 @@ exports.registerUser = async (req, res, next) => {
   );
 };
 
+// @desc login the user
+// @route POST /api/v1/login
+// @access Private (?)
 exports.login = (req, res, next) => {
   console.log("Login Successful");
   req.login(req.user, (err) => {
-    if (err) res.json({ error: err });
+    if (err) {
+      console.log(err);
+      res.json({ error: err });
+    }
     const { username, _id } = req.user;
 
     return res.status(201).json({
@@ -67,6 +83,9 @@ exports.login = (req, res, next) => {
   });
 };
 
+// @desc logout the user
+// @route POST /api/v1/login
+// @access Private (?)
 exports.logout = (req, res, next) => {
   console.log("Logout successful");
   req.logout(req.user);

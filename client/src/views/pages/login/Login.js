@@ -18,7 +18,7 @@ import { cilLockLocked, cilUser } from '@coreui/icons'
 import { GlobalContext } from 'src/context/GlobalState'
 
 const Login = () => {
-  const { user, login } = useContext(GlobalContext)
+  const { login_error, login } = useContext(GlobalContext)
   const [isIncorrect, setIsIncorrect] = useState(false)
 
   async function handleClick(e) {
@@ -31,8 +31,9 @@ const Login = () => {
   }
 
   useEffect(() => {
-    if (!user) setIsIncorrect(true)
-  }, [user])
+    if (login_error) setIsIncorrect(true)
+    console.log(login_error)
+  }, [login_error])
 
   return (
     <div className="bg-light min-vh-100 d-flex flex-row align-items-center">

@@ -4,7 +4,7 @@ import axios from 'axios'
 
 const initialState = {
   user: null,
-  error: null,
+  login_error: null,
   loading: true,
 }
 
@@ -45,10 +45,9 @@ export const GlobalProvider = ({ children }) => {
         payload: response.data.data,
       })
     } catch (err) {
-      console.error(err.response.data)
       dispatch({
         type: 'LOGIN_ERROR',
-        payload: undefined,
+        payload: err.response.data,
       })
     }
   }
@@ -66,20 +65,30 @@ export const GlobalProvider = ({ children }) => {
   async function checkUser() {
     try {
       const response = await axios.get('/api/v1/checkuser')
+
       dispatch({
         type: 'CHECK_USER',
         payload: response.data.data,
       })
     } catch (err) {
       dispatch({
-        type: 'LOGIN_ERROR',
-        payload: undefined,
+        type: 'CHECK_USER',
+        payload: err.response.data.user,
       })
     }
   }
 
   return (
-    <GlobalContext.Provider value={{ user: state.user, registerUser, login, logout, checkUser }}>
+    <GlobalContext.Provider
+      value={{
+        user: state.user,
+        login_error: state.login_error,
+        registerUser,
+        login,
+        logout,
+        checkUser,
+      }}
+    >
       {children}
     </GlobalContext.Provider>
   )
