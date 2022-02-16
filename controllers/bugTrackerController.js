@@ -1,3 +1,4 @@
+const { User } = require("../models/User");
 const { Project, Bug } = require("../models/Project");
 
 /* 
@@ -14,7 +15,8 @@ const { Project, Bug } = require("../models/Project");
 // Add the ability to get just one project later?
 exports.getProjects = async (req, res, next) => {
   try {
-    const projects = await Project.find();
+    const { username } = req.user;
+    const projects = await User.findOne({ username }).select("projects");
 
     /* 
    ------------------------------------------------------------------------------------
@@ -41,8 +43,18 @@ exports.getProjects = async (req, res, next) => {
 // @access Public
 exports.addProject = async (req, res, next) => {
   try {
-    const { name, description, id } = req.body;
-    const project = await Project.create(req.body);
+    const { username } = req.user;
+    console.log(req.user);
+    const project = req.body;
+    const data = await User.update(
+      { username: username },
+      {
+        $push: {
+          projects: project,
+        },
+        done,
+      }
+    );
 
     /* 
    ------------------------------------------------------------------------------------
@@ -54,10 +66,11 @@ exports.addProject = async (req, res, next) => {
    */
     return res.status(201).json({
       success: true,
-      data: project,
+      data: data,
     });
   } catch (err) {
-    return res.send(500).json({
+    console.log(req.user);
+    return res.status(500).json({
       success: false,
       error: err.message,
     });

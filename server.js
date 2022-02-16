@@ -1,6 +1,7 @@
 const express = require("express");
 const session = require("express-session");
 const passport = require("passport");
+const MongoStore = require("connect-mongo");
 const dotenv = require("dotenv");
 const colors = require("colors");
 const morgan = require("morgan");
@@ -21,6 +22,7 @@ app.use(
     secret: "Random Text",
     resave: false,
     saveUninitialized: false,
+    store: MongoStore.create(connectDB),
   })
 );
 app.use(passport.initialize());
