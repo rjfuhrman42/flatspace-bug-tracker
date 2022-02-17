@@ -9,7 +9,6 @@ exports.getCurrentUser = (req, res) => {
   // if there is, return that user to the frontend for use.
   // req.user is given to us via passport session ?
   console.log(`current user: ${req.user}`);
-  console.log(req.session);
 
   if (req.user) {
     const { username, _id } = req.user;

@@ -64,7 +64,7 @@ export const GlobalProvider = ({ children }) => {
 
   async function checkUser() {
     try {
-      const response = await axios.get('/api/v1/checkuser')
+      const response = await axios.get('/api/v1/checkuser', { credentials: 'include' })
 
       dispatch({
         type: 'CHECK_USER',

@@ -1,4 +1,4 @@
-const { User } = require("../models/User");
+const User = require("../models/User");
 const { Project, Bug } = require("../models/Project");
 
 /* 
@@ -15,8 +15,9 @@ const { Project, Bug } = require("../models/Project");
 // Add the ability to get just one project later?
 exports.getProjects = async (req, res, next) => {
   try {
-    const { username } = req.user;
-    const projects = await User.findOne({ username }).select("projects");
+    const { _id } = req.user;
+
+    const data = await User.findOne({ _id }).select("projects");
 
     /* 
    ------------------------------------------------------------------------------------
@@ -27,8 +28,8 @@ exports.getProjects = async (req, res, next) => {
    */
     return res.status(200).json({
       success: true,
-      count: projects.length,
-      data: projects,
+      count: data.projects.length,
+      data: data.projects,
     });
   } catch (err) {
     return res.send(500).json({
@@ -43,16 +44,15 @@ exports.getProjects = async (req, res, next) => {
 // @access Public
 exports.addProject = async (req, res, next) => {
   try {
-    const { username } = req.user;
-    console.log(req.user);
+    const { _id } = req.user;
+
     const project = req.body;
-    const data = await User.update(
-      { username: username },
+    const data = await User.updateOne(
+      { _id },
       {
         $push: {
           projects: project,
         },
-        done,
       }
     );
 
@@ -69,7 +69,6 @@ exports.addProject = async (req, res, next) => {
       data: data,
     });
   } catch (err) {
-    console.log(req.user);
     return res.status(500).json({
       success: false,
       error: err.message,
@@ -82,25 +81,67 @@ exports.addProject = async (req, res, next) => {
 // @route DELETE /api/v1/projects/:id
 // @access Public
 exports.deleteProject = async (req, res, next) => {
-  console.log("here!");
   try {
-    const { id } = req.params;
-    console.log(id);
-    const project = await Project.findById(id);
-    if (!project) {
+    const project_id = req.params.id;
+    const user_id = req.user._id;
+    console.log(project_id);
+    // ---------------------------
+    // CHECK IF THE PROJECT EXISTS
+    // ---------------------------
+    // User.findOne({username})
+    // |
+    // └→ Find the user with this username
+    //
+    // .select({projects: {$elemMatch: { _id: id }}})
+    // |
+    // └→ Select that user's projects property, find all elements that match the specfied property
+    //
+    const project = await User.findOne({ _id: user_id }).select({
+      projects: { $elemMatch: { _id: project_id } },
+    });
+
+    // --------------------------------------------------------
+    // IF THE PROJECT DOES NOT EXIST, THEN RETURN 404 NOT FOUND
+    // --------------------------------------------------------
+    if (!project.projects.length) {
       return res.status(404).json({
         success: false,
         error: "No project found",
       });
     }
 
-    await project.remove();
+    // ------------------------------------------------
+    // ELSE REMOVE THE SPECIFIED PROJECT FROM THE ARRAY
+    // ------------------------------------------------
+    // User.updateOne({_id: user_id})
+    // |
+    // └→ Find the user with this user id
+    //
+    // {$pull: {projects: { _id: id }}})
+    // |
+    // └→ Select that user's projects property, remove the element that matches the ID from the array
+    //
+    await User.updateOne(
+      { _id: user_id },
+      {
+        $pull: {
+          projects: { _id: project_id },
+        },
+      }
+    );
+
+    // ---------------------------------------
+    // OPERATION SUCCESSFUL, RETURN 200 STATUS
+    // ---------------------------------------
     return res.status(200).json({
       success: true,
       data: {},
     });
   } catch (err) {
-    return res.send(500).json({
+    // -------------------------------------------------
+    // SOMETHING WENT WRONG THE SERVER'S END, 500 STATUS
+    // -------------------------------------------------
+    return res.status(500).json({
       success: false,
       error: err.message,
     });

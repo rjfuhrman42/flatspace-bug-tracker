@@ -22,7 +22,6 @@ app.use(
     secret: "Random Text",
     resave: false,
     saveUninitialized: false,
-    store: MongoStore.create(connectDB),
   })
 );
 app.use(passport.initialize());

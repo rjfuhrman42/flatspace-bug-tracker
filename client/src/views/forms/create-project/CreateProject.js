@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
   CButton,
   CCard,
@@ -10,7 +10,29 @@ import {
   CFormTextarea,
 } from '@coreui/react'
 
+import axios from 'axios'
+
 const CreateProject = () => {
+  const [projectName, setProjectName] = useState('')
+  const [projectDescription, setProjectDescription] = useState('')
+
+  async function createProject() {
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }
+    try {
+      await axios.post(
+        '/api/v1/projects',
+        { name: projectName, description: projectDescription },
+        config,
+      )
+    } catch (err) {
+      console.log(err.message)
+    }
+  }
+
   return (
     <CCard className="mb-4">
       <CCardHeader>
@@ -20,16 +42,31 @@ const CreateProject = () => {
         <CForm>
           <p className="text-medium-emphasis small">Create a new project to add bugs</p>
           <div className="mb-3">
-            <CFormLabel htmlFor="exampleFormControlInput1">Project Name</CFormLabel>
-            <CFormInput type="text" id="exampleFormControlInput1" placeholder="hello-word-app..." />
+            <CFormLabel htmlFor="projectNameInput">Project Name</CFormLabel>
+            <CFormInput
+              type="text"
+              id="projectNameInput"
+              value={projectName}
+              placeholder="hello-word-app..."
+              onChange={(e) => setProjectName(e.target.value)}
+            />
           </div>
           <div className="mb-3">
-            <CFormLabel htmlFor="exampleFormControlTextarea1">Description (optional)</CFormLabel>
-            <CFormTextarea id="exampleFormControlTextarea1" rows="3"></CFormTextarea>
+            <CFormLabel htmlFor="projectDescriptionInput">Description (optional)</CFormLabel>
+            <CFormTextarea
+              id="projectDescriptionInput"
+              value={projectDescription}
+              rows="3"
+              onChange={(e) => setProjectDescription(e.target.value)}
+            ></CFormTextarea>
           </div>
         </CForm>
 
-        <CButton style={{ float: 'right', color: 'white' }} color="success">
+        <CButton
+          style={{ float: 'right', color: 'white' }}
+          color="success"
+          onClick={() => createProject()}
+        >
           Create project
         </CButton>
       </CCardBody>
