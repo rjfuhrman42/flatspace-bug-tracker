@@ -32,7 +32,7 @@ exports.getProjects = async (req, res, next) => {
       data: data.projects,
     });
   } catch (err) {
-    return res.send(500).json({
+    return res.status(500).json({
       success: false,
       error: err.message,
     });
@@ -74,7 +74,6 @@ exports.addProject = async (req, res, next) => {
       error: err.message,
     });
   }
-  res.send("POST request");
 };
 
 // @desc delete projects
@@ -84,7 +83,7 @@ exports.deleteProject = async (req, res, next) => {
   try {
     const project_id = req.params.id;
     const user_id = req.user._id;
-    console.log(project_id);
+
     // ---------------------------
     // CHECK IF THE PROJECT EXISTS
     // ---------------------------
