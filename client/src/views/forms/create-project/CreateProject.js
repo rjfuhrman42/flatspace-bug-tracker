@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useHistory } from 'react-router-dom'
 import {
   CButton,
   CCard,
@@ -15,6 +16,7 @@ import axios from 'axios'
 const CreateProject = () => {
   const [projectName, setProjectName] = useState('')
   const [projectDescription, setProjectDescription] = useState('')
+  const history = useHistory()
 
   async function createProject() {
     const config = {
@@ -23,11 +25,12 @@ const CreateProject = () => {
       },
     }
     try {
-      await axios.post(
+      const response = await axios.post(
         '/api/v1/projects',
         { name: projectName, description: projectDescription },
         config,
       )
+      history.push('/base/projects')
     } catch (err) {
       console.log(err.message)
     }

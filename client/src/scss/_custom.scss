@@ -1,1 +1,10 @@
 // Here you can add other styles
+.project-name-group {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.project-link {
+  padding-right: 1em;
+}
