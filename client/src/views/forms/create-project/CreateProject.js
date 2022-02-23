@@ -25,7 +25,7 @@ const CreateProject = () => {
       },
     }
     try {
-      const response = await axios.post(
+      await axios.post(
         '/api/v1/projects',
         { name: projectName, description: projectDescription },
         config,

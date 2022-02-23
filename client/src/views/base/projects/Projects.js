@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { CCard, CCardBody, CCardHeader, CListGroup, CListGroupItem } from '@coreui/react'
+import { CButton, CCard, CCardBody, CCardHeader, CListGroup, CListGroupItem } from '@coreui/react'
 import axios from 'axios'
 
 const Projects = () => {
@@ -12,8 +12,20 @@ const Projects = () => {
       // figure out a way to cache this so we dont have to ask the server every time
 
       if (response) {
-        console.log(response.data.data)
         setProjects(response.data.data)
+      }
+    } catch (err) {
+      console.log(err.message)
+    }
+  }
+
+  async function deleteProject(id) {
+    try {
+      const response = await axios.delete(`/api/v1/projects/${id}`)
+
+      if (response.data.success === true) {
+        const updatedProjects = projects.filter((project) => project._id !== id)
+        setProjects(updatedProjects)
       }
     } catch (err) {
       console.log(err.message)
@@ -44,14 +56,21 @@ const Projects = () => {
                     <h5>{project.name}</h5>
                   </Link>
                   {
-                    // each project has a timestamp for when it was created
-                    // if its been less than five minutes since the project was created, add NEW tag next to the title
-                    // so that the user can quickly see the project they just created
+                    // Each project has a timestamp for when it was created
+                    // If its been less than five minutes since the project was created, add NEW tag next to the title
+                    // So that the user can quickly see the project they just created
                     // 300,000ms is equal 5 minutes
                     Date.now() - Date.parse(project.createdAt) <= 300000 && (
                       <span className="badge bg-success">NEW</span>
                     )
                   }
+                  <CButton
+                    color="danger"
+                    className="ms-auto"
+                    onClick={() => deleteProject(project._id)}
+                  >
+                    Delete?
+                  </CButton>
                 </div>
 
                 <p>{project.description}</p>
