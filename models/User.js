@@ -41,6 +41,16 @@ const UserSchema = new mongoose.Schema({
         default: Date.now,
       },
 
+      /* 
+   --------------------------------------------------------------------------------------
+    Schema.Types.ObjectId, ref: "~collection reference name~" 
+    =========================================================
+    Allows us to use populate() later to populate the bugs associated with this project
+    Those bugs are stored in a separate collection because bugs will be unbounded. 
+    They contain a projectId, so that they can be populated to their respective projects
+   --------------------------------------------------------------------------------------
+   */
+
       bugs: [{ type: mongoose.Schema.Types.ObjectId, ref: "Bug" }],
     },
   ],

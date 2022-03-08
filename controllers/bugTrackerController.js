@@ -1,5 +1,5 @@
 const User = require("../models/User");
-const { Project, Bug } = require("../models/Project");
+const Bug = require("../models/Bug");
 
 /* 
 ------------------------------------------------------------------------------------
