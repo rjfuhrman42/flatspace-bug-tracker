@@ -23,6 +23,7 @@ const BugSchema = new mongoose.Schema({
   description: {
     type: String,
     trim: true,
+    required: [true, "Please describe the bug"],
     validator: descriptionLengthValidator,
     msg: "Please keep your bug description less than or equal to 200 characters",
   },

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
-import { CCard, CCardBody, CCardHeader, CListGroup, CListGroupItem } from '@coreui/react'
+import { CCard, CCardBody, CCardHeader, CListGroup, CListGroupItem, CButton } from '@coreui/react'
 
 const Project = (props) => {
   const [project, setProject] = useState(undefined)
@@ -19,6 +19,9 @@ const Project = (props) => {
         <strong>{project && project.name}&#39;s bugs</strong>
       </CCardHeader>
       <CCardBody>
+        <CButton style={{ marginBottom: '1em', color: 'white' }} color="success">
+          Create a new bug +
+        </CButton>
         <CListGroup>
           <CListGroupItem component="a" href="#">
             <h4>Console Error on Website in Chrome</h4>

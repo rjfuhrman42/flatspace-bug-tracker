@@ -7,6 +7,8 @@ const {
   getProjects,
   addProject,
   deleteProject,
+  addBug,
+  getBugs,
 } = require("../controllers/bugTrackerController");
 
 const {
@@ -36,5 +38,8 @@ router.route("/checkuser").get(getCurrentUser);
 router.route("/projects").get(getProjects).post(addProject);
 
 router.route("/projects/:id").delete(deleteProject);
+
+router.route("/bugs").post(addBug);
+router.route("/bugs/:id").get(getBugs);
 
 module.exports = router;

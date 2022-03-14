@@ -1,5 +1,6 @@
 const User = require("../models/User");
 const Bug = require("../models/Bug");
+const { Mongoose } = require("mongoose");
 
 /* 
 ------------------------------------------------------------------------------------
@@ -156,9 +157,53 @@ exports.deleteProject = async (req, res, next) => {
 */
 
 // @desc Get ALL bugs for a project
-// @route GET /api/v1/projects
+// @route GET /api/v1/bugs/:id
 // @access Public
 exports.getBugs = async (req, res, next) => {
   try {
-  } catch (err) {}
+    const project_id = req.params.id;
+
+    const user_id = req.user._id;
+
+    // - select the current user,
+    // - select the specified project,
+    // - populate that project's bugs
+    const project = await User.findOne({ _id: user_id })
+      .select({
+        projects: { $elemMatch: { _id: project_id } },
+      })
+      .populate("bugs");
+    if (project)
+      res.status(200).json({
+        success: true,
+        data: project,
+      });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      success: false,
+      error: err.message,
+    });
+  }
+};
+
+// @desc add a bug to the collection for a project
+// @route GET /api/v1/bugs
+// @access Public
+exports.addBug = async (req, res, next) => {
+  try {
+    const bug = req.body;
+    const data = await Bug.create(bug);
+
+    if (data)
+      res.status(201).json({
+        success: true,
+        data: data,
+      });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      error: err.message,
+    });
+  }
 };
