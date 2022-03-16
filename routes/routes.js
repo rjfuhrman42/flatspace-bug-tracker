@@ -9,6 +9,7 @@ const {
   deleteProject,
   addBug,
   getBugs,
+  deleteBug,
 } = require("../controllers/bugTrackerController");
 
 const {
@@ -40,6 +41,6 @@ router.route("/projects").get(getProjects).post(addProject);
 router.route("/projects/:id").delete(deleteProject);
 
 router.route("/bugs").post(addBug);
-router.route("/bugs/:id").get(getBugs);
+router.route("/bugs/:id").get(getBugs).delete(deleteBug);
 
 module.exports = router;

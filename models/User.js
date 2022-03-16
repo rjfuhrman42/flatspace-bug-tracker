@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const Bug = require("./Bug");
 
 function nameLengthValidator(val) {
   return val.length <= 20 && val.length >= 2;

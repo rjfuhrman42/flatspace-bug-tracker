@@ -1,6 +1,5 @@
 const User = require("../models/User");
 const Bug = require("../models/Bug");
-const { Mongoose } = require("mongoose");
 
 /* 
 ------------------------------------------------------------------------------------
@@ -161,23 +160,28 @@ exports.deleteProject = async (req, res, next) => {
 // @access Public
 exports.getBugs = async (req, res, next) => {
   try {
+    // get all bugs matching the specific project ID  from the bugs collection
     const project_id = req.params.id;
 
-    const user_id = req.user._id;
+    const bugs = await Bug.find({ project_id: project_id });
 
-    // - select the current user,
-    // - select the specified project,
-    // - populate that project's bugs
-    const project = await User.findOne({ _id: user_id })
-      .select({
-        projects: { $elemMatch: { _id: project_id } },
-      })
-      .populate("bugs");
-    if (project)
-      res.status(200).json({
-        success: true,
-        data: project,
+    // -------------------------------------------------------------------
+    // IF THE NO BUGS ARE FOUND WITH THE PROJECT_ID, RETURN 404 NOT FOUND
+    // -------------------------------------------------------------------
+    if (!bugs.length) {
+      res.status(404).json({
+        success: false,
+        error: "No bugs found for that project",
       });
+    }
+
+    // ---------------------------------------
+    // OPERATION SUCCESSFUL, RETURN 200 STATUS
+    // ---------------------------------------
+    res.status(200).json({
+      success: true,
+      data: bugs,
+    });
   } catch (err) {
     console.log(err);
     res.status(500).json({
@@ -200,6 +204,29 @@ exports.addBug = async (req, res, next) => {
         success: true,
         data: data,
       });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      error: err.message,
+    });
+  }
+};
+
+exports.deleteBug = async (req, res) => {
+  try {
+    const bug = await Bug.findByIdAndDelete({ _id: req.params.id });
+
+    if (!bug) {
+      res.status(404).json({
+        success: false,
+        error: "Bug not found",
+      });
+    }
+
+    res.status(201).json({
+      success: true,
+      data: bug,
+    });
   } catch (err) {
     res.status(500).json({
       success: false,
