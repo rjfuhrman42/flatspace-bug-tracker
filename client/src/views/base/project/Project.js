@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import { CCard, CCardBody, CCardHeader, CListGroup, CListGroupItem, CButton } from '@coreui/react'
+import { getBugs } from '../../../api/utils'
 
 const Project = (props) => {
   const [project, setProject] = useState(undefined)
+  const [bugs, setBugs] = useState(undefined)
 
   // The result of the useLocation hook
   const currentLocation = useLocation()
@@ -12,6 +14,14 @@ const Project = (props) => {
     const { project } = currentLocation.query
     setProject(project)
   }, [currentLocation])
+
+  useEffect(() => {
+    project &&
+      getBugs(project._id).then((data) => {
+        console.log(data)
+        setBugs(data)
+      })
+  }, [project])
 
   return (
     <CCard className="mb-4">
@@ -23,10 +33,21 @@ const Project = (props) => {
           Create a new bug +
         </CButton>
         <CListGroup>
-          <CListGroupItem component="a" href="#">
-            <h4>Console Error on Website in Chrome</h4>
-            <p style={{ marginBottom: '0' }}>#584 - Opened on: October 2, 2021</p>
-          </CListGroupItem>
+          {bugs ? (
+            bugs.map((bug) => (
+              <CListGroupItem component="a" href="#" key={bug._id}>
+                <h4>{bug.name}</h4>
+                <p style={{ marginBottom: '0' }}>{bug.description}</p>
+                <p>
+                  #{bug._id} - Opened on: {bug.createdAt}
+                </p>
+              </CListGroupItem>
+            ))
+          ) : (
+            <CListGroupItem>
+              <h4>This project has no bugs. Try creating one to see it here!</h4>
+            </CListGroupItem>
+          )}
         </CListGroup>
       </CCardBody>
     </CCard>

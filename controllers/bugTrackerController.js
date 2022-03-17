@@ -178,10 +178,11 @@ exports.getBugs = async (req, res, next) => {
     // ---------------------------------------
     // OPERATION SUCCESSFUL, RETURN 200 STATUS
     // ---------------------------------------
-    res.status(200).json({
-      success: true,
-      data: bugs,
-    });
+    else
+      res.status(200).json({
+        success: true,
+        data: bugs,
+      });
   } catch (err) {
     console.log(err);
     res.status(500).json({
